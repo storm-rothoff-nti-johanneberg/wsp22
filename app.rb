@@ -40,29 +40,8 @@ post('/image/new') do
     File.open(path, 'wb') do |f|
         f.write(params[:imageFile][:tempfile].read)
     end
-    
+       
     redirect('/')
-
-    #File.open("./public/#{"filename"}", 'wb') do |f|
-    # p "ö"
-    # p File.read(params[:imageFile][:tempfile])
-    # p "ö"
-    # File.write(path, File.read(params[:imageFile][:tempfile]))
-    #     # p "ö"
-        # p File.read(params[:imageFile][:tempfile].read)
-
-    # File.open(path, 'wb') do |f|
-    #     File.write(File.read)
-    # end 
-    # File.write(path,File.read())
-    
-    # @filename = params[:imageFile]
-    # p @filename["filename"]
-    # p @filename["tempfile"]
-    # db.execute("INSERT INTO images (img_id, mod) VALUES (?,?)", @filename["tempfile"], mod)
-    # File.open("./public/#{@filename}", 'wb') do |f|
-    #     f.write(file.read)
-    # end
 end
 
 post('/image/delete/:id') do 
