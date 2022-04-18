@@ -1,0 +1,9 @@
+
+- images.each do |image|
+    p = image["img_id"]
+    img src="#{image[:img_id]}" alt="image#{image[:id]}"
+ 
+    form method="POST" action="image/delete/#{image["id"]}" 
+        input type="submit" value="Remove the image above LÅL"/
+
+a href="/newimg" Ny bild 
