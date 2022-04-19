@@ -32,10 +32,10 @@ post('/image/new') do
 
     path = File.join("./public/img/",params[:imageFile]["filename"])
     path_for_db = File.join("img/",params[:imageFile]["filename"])
-    #p params[:imageFile][:tempfile]
     db = db_called('db/main.db')
-    mod = rand(1...10)
-    db.execute("INSERT INTO images (path, mod) VALUES (?, ?)", path_for_db, mod)
+    mod = rand(1...10)  
+    #p "test: #{params[:imageName]}"
+    db.execute("INSERT INTO images (path, mod, name) VALUES (?, ?, ?)", path_for_db, mod, params[:imageName])
 
     File.open(path, 'wb') do |f|
         f.write(params[:imageFile][:tempfile].read)
@@ -69,8 +69,9 @@ post('/image/delete/:id') do
     n = params[:id].to_i
     db = db_called("db/main.db")
     result = db.execute("DELETE FROM images WHERE id = ?", n)
+
+    File.delete(params["path"]) if File.exist?(params["path"])
     redirect('/images')
-    File.delete(path) if File.exist?(path)
 end
 
 # db = db_called("db/main.db")
