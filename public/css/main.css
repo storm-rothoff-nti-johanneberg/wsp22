@@ -1,0 +1,43 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+@keyframes spin {
+    from{
+    transform: rotateY(30turn);
+    transition: transform 60s;
+    transform-style: preserve-3d;
+    }
+}
+.container{
+    display: flex;
+    justify-content:center;
+
+}
+.container:hover{
+    animation-duration: 60s;
+    animation-name: spin;
+    animation-iteration-count: infinite;
+    animation-direction: alternate;
+    transition-timing-function: step-end;
+}
+.image{
+    width:20rem;
+    height:20rem;
+    margin-top:2rem;
+
+}
+.frame {
+    width:24rem;
+    height:24rem;
+    margin-left:-22rem;
+}
+.imageName{
+    z-index: 1;
+    position: absolute;
+    color:red;
+    font-size:5rem;
+    transform:translateZ(50px)
+}

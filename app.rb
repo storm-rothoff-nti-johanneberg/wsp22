@@ -17,9 +17,9 @@ end
 
 get('/images') do
     db = db_called("db/main.db")
-    result = db.execute("SELECT * FROM images")
-    p result
-    return slim(:"images/index", locals:{images:result})
+    images = db.execute("SELECT * FROM images")
+    frames = db.execute("SELECT * FROM frameModRelation")
+    return slim(:"images/index", locals:{images:images, frames:frames})
 end
 
 get('/newimg') do
@@ -32,24 +32,26 @@ post('/image/new') do
 
     path = File.join("./public/img/",params[:imageFile]["filename"])
     path_for_db = File.join("img/",params[:imageFile]["filename"])
-    #p params[:imageFile][:tempfile]
     db = db_called('db/main.db')
-    mod = rand(1...10)
-    db.execute("INSERT INTO images (path, mod) VALUES (?, ?)", path_for_db, mod)
+    mod = rand(1...10)  
+    #p "test: #{params[:imageName]}"
+    db.execute("INSERT INTO images (path, mod, name) VALUES (?, ?, ?)", path_for_db, mod, params[:imageName])
 
     File.open(path, 'wb') do |f|
         f.write(params[:imageFile][:tempfile].read)
-    end
-       
-    redirect('/')
+    end      
+    redirect('/images')
 end
 
 post('/image/delete/:id') do 
     n = params[:id].to_i
     db = db_called("db/main.db")
+    deletePath = db.execute("SELECT path FROM images WHERE id = ?", n)
+
+    File.delete("public/#{deletePath[0]["path"]}") if File.exist?("public/#{deletePath[0]["path"]}")
+    
     result = db.execute("DELETE FROM images WHERE id = ?", n)
     redirect('/images')
-    File.delete(path) if File.exist?(path)
 end
 
 # db = db_called("db/main.db")
