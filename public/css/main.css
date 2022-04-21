@@ -3,7 +3,10 @@
     margin: 0;
     padding: 0;
 }
-
+nav{
+    display: flex;
+    justify-content:space-around;
+}
 @keyframes spin {
     from{
     transform: rotateY(30turn);
@@ -39,5 +42,13 @@
     position: absolute;
     color:red;
     font-size:5rem;
-    transform:translateZ(50px)
+    transform:translateZ(30px)
+}
+.userName{
+    padding-top: 21.5rem;
+    z-index: 1;
+    position: absolute;
+    color:red;
+    font-size:2rem;
+    transform:translateZ(10px)
 }

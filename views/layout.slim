@@ -6,12 +6,22 @@ html lang="en"
         meta name="viewport" content="width=device-width, initial-scale=1.0"/
         link rel="stylesheet" href="css/main.css" type="text/css"/ 
         title Tu madre
-    body   
-        nav          
-            header Common Header    
+    body 
+        - if session[:id] != nil 
+            p Logged in as: #{session[:username]}
+        - else
+            p Not logged in
+        nav
+            a href="/images" Bilder 
+            a href="/showlogin" Login 
+            a href="/showregister" Register
+        header Common Header 
+                
+                    
 
-            h1 Stinky
 
-            == yield
+        h1 Stinky
+
+        == yield
 
         footer Common Footer

@@ -1,9 +1,16 @@
+
 - images.each do |image|
     p = "#{image["path"]}"
-    
     / p = frames[image["mod"]]["path"]
     div class="container"
         p class="imageName" #{image["name"]}
+        / - if users[image["user_id"] == nil
+        /     p class="userName" No userId 
+        / - else
+        /- temp = users[image["user_id"]
+        
+        p class="userName" By: #{users[image["user_id"]-1]["username"]}
+        
         img src="#{image["path"]}" alt="image#{image[:id]}" class="image"
         img src="../#{frames[image["mod"]]["path"]}" class="image, frame"
     form method="POST" action="image/delete/#{image["id"]}" 
