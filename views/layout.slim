@@ -13,7 +13,10 @@ html lang="en"
             p Not logged in
         nav
             a href="/images" Bilder 
-            a href="/showlogin" Login 
+            - if session[:id] != nil 
+                a href="/logout" Log out
+            - else
+                a href="/showlogin" Login
             a href="/showregister" Register
         header Common Header 
                 

@@ -6,6 +6,9 @@
 nav{
     display: flex;
     justify-content:space-around;
+    width: 100%;
+    position: fixed;
+    z-index:100;
 }
 @keyframes spin {
     from{
@@ -14,40 +17,52 @@ nav{
     transform-style: preserve-3d;
     }
 }
-.container{
+.mainContainer{
+    background-color:aliceblue;
+    max-height: 24rem;
     display: flex;
     justify-content:center;
 
 }
-.container:hover{
+.mainContainer > *:hover {
     animation-duration: 60s;
     animation-name: spin;
     animation-iteration-count: infinite;
     animation-direction: alternate;
     transition-timing-function: step-end;
 }
+.imageContainer{
+    background-color:rgba(0, 255, 255, 0.414);
+}
+
 .image{
     width:20rem;
     height:20rem;
-    margin-top:2rem;
+    margin-bottom:2rem;
 
 }
 .frame {
     width:24rem;
     height:24rem;
+
     margin-left:-22rem;
+    border-radius:1rem;
 }
 .imageName{
+    display: flex;
+    justify-content:center;
+    width: 100%;
     z-index: 1;
-    position: absolute;
     color:red;
     font-size:5rem;
     transform:translateZ(30px)
 }
 .userName{
+    display: flex;
+    justify-content:center;
+    width: 100%;
     padding-top: 21.5rem;
     z-index: 1;
-    position: absolute;
     color:red;
     font-size:2rem;
     transform:translateZ(10px)

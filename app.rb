@@ -20,11 +20,14 @@ end
 get('/showregister') do
     slim(:register)
 end
-
 get('/showlogin') do
     slim(:login)
 end
-
+get('/logout') do
+    session[:id] = nil
+    session[:username] = nil
+    redirect('/images')
+end
 post('/login') do
     username = params[:username]
     password = params[:password]
