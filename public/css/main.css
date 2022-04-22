@@ -3,6 +3,9 @@
     margin: 0;
     padding: 0;
 }
+.HUD{
+    z-index: 1000;
+}
 nav{
     display: flex;
     justify-content:space-around;
@@ -18,13 +21,13 @@ nav{
     }
 }
 .mainContainer{
-    background-color:aliceblue;
+    /* background-color:aliceblue; */
     max-height: 24rem;
     display: flex;
     justify-content:center;
 
 }
-.mainContainer > *:hover {
+.mainContainer:hover >*{
     animation-duration: 60s;
     animation-name: spin;
     animation-iteration-count: infinite;
@@ -32,23 +35,34 @@ nav{
     transition-timing-function: step-end;
 }
 .imageContainer{
-    background-color:rgba(0, 255, 255, 0.414);
+    
+    border-bottom:40rem;
+    /* background-color:rgba(0, 255, 255, 0.414); */
 }
-
+.imageMain{
+    width:20rem;
+    height:20rem;
+    margin-bottom:2rem;
+}
+.frameMain {
+    width:24rem;
+    height:24rem;
+    margin-left:-22rem;
+    border-radius:1rem;
+}
 .image{
     width:20rem;
     height:20rem;
     margin-bottom:2rem;
-
 }
 .frame {
     width:24rem;
     height:24rem;
-
     margin-left:-22rem;
     border-radius:1rem;
 }
 .imageName{
+    margin-top: -25rem;
     display: flex;
     justify-content:center;
     width: 100%;
@@ -58,6 +72,7 @@ nav{
     transform:translateZ(30px)
 }
 .userName{
+    margin-top: -5rem;
     display: flex;
     justify-content:center;
     width: 100%;

@@ -23,6 +23,9 @@ end
 get('/showlogin') do
     slim(:login)
 end
+get('/showaccount') do
+    slim(:account)
+end
 get('/logout') do
     session[:id] = nil
     session[:username] = nil
@@ -80,7 +83,16 @@ get('/newimg') do
     return slim(:new)
 end
 
-
+get('/images/show/:id') do
+    db = dbCalled("db/main.db")
+    id = params[:id].to_i
+    userid = session[:id].to_i
+    usersUnsorted = db.execute("SELECT id, username FROM users")
+    users = usersUnsorted.sort_by { |k| k["id"] }
+    image = db.execute("SELECT * FROM images WHERE id = ?", id)
+    frames = db.execute("SELECT * FROM frameModRelation")
+    return slim(:"images/show", locals:{image:image, frames:frames, users:users})
+end
 
 post("/image/new") do 
     id = session[:id].to_i
@@ -88,7 +100,7 @@ post("/image/new") do
     pathForDb = File.join("img/",params[:imageFile]["filename"])
     db = dbCalled('db/main.db')
     mod = rand(1...10)  
-    db.execute("INSERT INTO images (path, mod, name, user_id) VALUES (?, ?, ?, ?)", pathForDb, mod, params[:imageName], id)
+    db.execute("INSERT INTO images (path, mod, name, user_id, creator_id) VALUES (?, ?, ?, ?, ?)", pathForDb, mod, params[:imageName], id, id)
 
     File.open(path, 'wb') do |f|
         f.write(params[:imageFile][:tempfile].read)
