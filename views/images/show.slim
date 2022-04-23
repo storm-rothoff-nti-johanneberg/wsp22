@@ -14,16 +14,20 @@ br
 - if image[0]["price"] == nil 
     p This piece is not currently for sale 
 - else
-    p This piece may be bought for #{image[0]["price"] }
+    p This piece may be bought for #{image[0]["price"]} Tokens 
 
 - if image[0]["user_id"] == session[:id] 
-    form method="POST" action="delete/#{image[0]["id"]}" 
-        input class="HUD" type="submit" value="Remove the Artwork"/
-    br
     form method="POST" action="update/#{image[0]["id"]}" 
+        br
         input type="number" name="value" placeholder="Set a Price for Artwork"
         input class="HUD" type="submit" value="Set a Price for Artwork"/
+        
 
+    form method="POST" action="delete/#{image[0]["id"]}" 
+        br
+        input class="HUD" type="submit" value="Remove the Artwork"/
+    
+   
 - elsif session[:id] == nil && image[0]["price"] != nil 
     p Log in to purchase this piece 
 
