@@ -23,9 +23,29 @@ end
 get('/showlogin') do
     slim(:login)
 end
-get('/showaccount') do
-    slim(:account)
+get('/showaccount/:id') do
+    db = dbCalled("db/main.db")
+    id = params[:id].to_i
+    userId = session[:id].to_i
+    usersUnsorted = db.execute("SELECT id, username FROM users")
+    users = usersUnsorted.sort_by { |k| k["id"] }
+    images = db.execute("SELECT * FROM images WHERE user_id = ? OR creator_id = ?", id, id)
+    frames = db.execute("SELECT * FROM frameModRelation")
+    return slim(:account, locals:{images:images, frames:frames, users:users, id:id})
 end
+
+# get('/images/show/:id') do
+#     db = dbCalled("db/main.db")
+#     id = params[:id].to_i
+#     userid = session[:id].to_i
+#     usersUnsorted = db.execute("SELECT id, username FROM users")
+#     users = usersUnsorted.sort_by { |k| k["id"] }
+#     image = db.execute("SELECT * FROM images WHERE id = ?", id)
+#     frames = db.execute("SELECT * FROM frameModRelation")
+#     return slim(:"images/show", locals:{image:image, frames:frames, users:users})
+# end
+
+
 get('/logout') do
     session[:id] = nil
     session[:username] = nil

@@ -8,13 +8,13 @@ html lang="en"
         title Tu madre
     body 
         - if session[:id] != nil 
-            p Logged in as: #{session[:username]}
+            p Logged in as: #{session[:username]} (id:#{session[:id]})
         - else
             p Not logged in
         nav
             a href="/images" Bilder 
             - if session[:id] != nil 
-                a href="/showaccount" Account
+                a href="/showaccount/#{session[:id]}" Account
                 a href="/logout" Log out
             - else
                 a href="/showlogin" Login

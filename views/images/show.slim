@@ -1,7 +1,11 @@
 p Name: #{image[0]["name"]}
+h2 style="display:inline" Owned by: 
+a href="/showaccount/#{image[0]["user_id"]}" #{users[image[0]["user_id"]-1]["username"]}
+spacer
+h3 style="display:inline" Created by: 
+a href="/showaccount/#{image[0]["creator_id"]}" #{users[image[0]["creator_id"]-1]["username"]}
 
-p #{frames[image[0]["mod"]]["path"]}
-
+p -
 
 img class="imageMain" src="/#{image[0]["path"]}" alt="image#{image[0][:id]}" 
 img src="/#{frames[image[0]["mod"]]["path"]}" class="frameMain"
