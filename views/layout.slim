@@ -5,28 +5,38 @@ html lang="en"
         meta http-equiv="X-UA-Compatible" content="IE=edge"/
         meta name="viewport" content="width=device-width, initial-scale=1.0"/
         link rel="stylesheet" href="../../css/main.css" type="text/css"/ 
-        title Tu madre
+        <script type="text/javascript" src="../../js/main.js"></script>
+        title InstaMiau
     body 
         - if session[:id] != nil 
             p Logged in as: #{session[:username]} (id:#{session[:id]})
         - else
             p Not logged in
         nav
-            a href="/images" Bilder 
-            - if session[:id] != nil 
-                a href="/showaccount/#{session[:id]}" Account
-                a href="/logout" Log out
-            - else
-                a href="/showlogin" Login
-                a href="/showregister" Register
+            div class="navMain"
+                a href="/images" Bilder 
+                - if session[:id] != nil 
+                    a href="/showaccount/#{session[:id]}" Account
+                    a href="/logout" Log out
+                - else
+                    a href="/showlogin" Login
+                    a href="/showregister" Register
+            div class="navSide"
+                - if session[:id] != nil 
+                    h1 class="navUsername" #{session[:username]}
+                    h1 class="navTokens" Tokens: #{session[:tokens]}
+                    
+                    
+
             
-        header Common Header 
+        header
+            br
                 
                     
 
 
-        h1 Stinky
-
+            p Insta
+            img class="logoMain" src="/img/resources/InstaMiau.jpg"
         == yield
 
         footer Common Footer

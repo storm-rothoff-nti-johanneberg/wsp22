@@ -2,11 +2,37 @@ p Name: #{image[0]["name"]}
 h2 style="display:inline" Owned by: 
 a href="/showaccount/#{image[0]["user_id"]}" #{users[image[0]["user_id"]-1]["username"]}
 spacer
-h3 style="display:inline" Created by: 
+h4 style="display:inline"  Created by: 
 a href="/showaccount/#{image[0]["creator_id"]}" #{users[image[0]["creator_id"]-1]["username"]}
-
-p -
+br
 
 img class="imageMain" src="/#{image[0]["path"]}" alt="image#{image[0][:id]}" 
 img src="/#{frames[image[0]["mod"]]["path"]}" class="frameMain"
+
 / img src="/img/IMG_20200310_134601798.jpg"
+br
+- if image[0]["price"] == nil 
+    p This piece is not currently for sale 
+- else
+    p This piece may be bought for #{image[0]["price"] }
+
+- if image[0]["user_id"] == session[:id] 
+    form method="POST" action="delete/#{image[0]["id"]}" 
+        input class="HUD" type="submit" value="Remove the Artwork"/
+    br
+    form method="POST" action="update/#{image[0]["id"]}" 
+        input type="number" name="value" placeholder="Set a Price for Artwork"
+        input class="HUD" type="submit" value="Set a Price for Artwork"/
+
+- elsif session[:id] == nil && image[0]["price"] != nil 
+    p Log in to purchase this piece 
+
+- elsif image[0]["price"] == nil
+    p Ask the owner to set a price if you wish to purchase
+- else
+    - if session[:tokens] >= image[0]["price"]
+        form method="POST" action="purchase/#{image[0]["id"]}" 
+            input class="HUD" type="submit" value="Purchase this artwork"/
+    - else
+        form method="GET" action="/images/show/#{image[0]["id"]}" 
+                input class="HUD" type="submit" value="Not enough Tokens"/

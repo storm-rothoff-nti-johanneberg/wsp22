@@ -59,10 +59,12 @@ post('/login') do
     pwddigest = result["pwddigest"]
     id = result["id"]
     username = result["username"]
+    tokens = result["tokens"]
 
     if BCrypt::Password.new(pwddigest) == password
         session[:id] = id
         session[:username] = username
+        session[:tokens] = tokens
         redirect('/images')
     else
        "Username and Password do not match"
@@ -128,13 +130,45 @@ post("/image/new") do
     redirect('/images')
 end
 
-post('/image/delete/:id') do 
-    n = params[:id].to_i
+post('/images/show/delete/:id') do 
+    id = params[:id].to_i
     db = dbCalled("db/main.db")
-    deletePath = db.execute("SELECT path FROM images WHERE id = ?", n)
+    deletePath = db.execute("SELECT path FROM images WHERE id = ?", id)
     #Tar bort all
     File.delete("public/#{deletePath[0]["path"]}") if File.exist?("public/#{deletePath[0]["path"]}")  
-    result = db.execute("DELETE FROM images WHERE id = ?", n)
+    result = db.execute("DELETE FROM images WHERE id = ?", id)
     redirect('/images')
 end
+post('/images/show/update/:id') do 
+    id = params[:id].to_i
+    value = params[:value].to_i
+    db = dbCalled("db/main.db")
+    db.execute("UPDATE images SET price = ? WHERE id = ?", value, id)
+    redirect("/images/show/#{id}")
+end
 
+post('/images/show/purchase/:id') do 
+    db = dbCalled("db/main.db")
+    id = params[:id].to_i
+    user_id = session[:id].to_i
+    # usersUnsorted = db.execute("SELECT id, username FROM users")
+    # users = usersUnsorted.sort_by { |k| k["id"] }
+   
+   
+    seller_id = db.execute("SELECT user_id FROM images WHERE id = ?", id)
+    p seller_id
+    price = db.execute("SELECT price FROM images WHERE id = ?", id)
+    tokensBuyer = db.execute("SELECT tokens FROM users WHERE id = ?", user_id)
+    tokensSeller = db.execute("SELECT tokens FROM users WHERE id = ?", seller_id[0]["user_id"])
+    newBuyer = tokensBuyer[0]["tokens"].to_i - price[0]["price"].to_i
+    newSeller = tokensSeller[0]["tokens"].to_i + price[0]["price"].to_i
+
+
+
+    db.execute("UPDATE users SET tokens = ? WHERE id = ?", newBuyer, user_id)
+    db.execute("UPDATE users SET tokens = ? WHERE id = ?", newSeller, seller_id[0]["user_id"])
+
+    db.execute("UPDATE images SET user_id = ? WHERE id = ?", user_id, id)
+    session[:tokens] = db.execute("SELECT tokens FROM users WHERE id = ?", user_id)[0]["tokens"]
+    redirect("/images/show/#{id}")
+end

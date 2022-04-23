@@ -15,9 +15,9 @@ h1 Gallery of #{users[id-1]["username"]}
                 
                 p class="userName" By: #{users[image["user_id"]-1]["username"]}
                 
-        - if id == session[:id] 
-            form method="POST" action="image/delete/#{image["id"]}" 
-                input class="HUD" type="submit" value="Remove the image above"/
+        / - if id == session[:id] 
+        /     form method="POST" action="image/delete/#{image["id"]}" 
+        /         input class="HUD" type="submit" value="Remove the image above"/
         
 h2 Images by #{users[id-1]["username"]}
 
