@@ -1,4 +1,6 @@
-a href="/newimg" Ny bild 
+- if session[:id] != nil
+    a href="/newimg" Ny bild
+
 - images.each do |image|
     p = "#{image["id"]}"
     / p = frames[image["mod"]]["path"]
@@ -7,7 +9,7 @@ a href="/newimg" Ny bild
             
             img src="#{image["path"]}" alt="image#{image[:id]}" class="image" 
             img src="../#{frames[image["mod"]]["path"]}" class="frame"
-            p class="imageName" #{image["name"]}
+            p class="imageName" #{image["name"].force_encoding('ASCII-8BIT')}
             / - if users[image["user_id"] == nil
             /     p class="userName" No userId 
             / - else
