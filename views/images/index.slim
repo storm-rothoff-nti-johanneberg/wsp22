@@ -1,7 +1,7 @@
 - if session[:id] != nil
     a href="/newimg" Ny bild
 
-- images.each do |image|
+- images.reverse_each do |image|
     p = "#{image["id"]}"
     / p = frames[image["mod"]]["path"]
     div class="mainContainer" onclick="location.href='/images/show/#{image["id"]}'"

@@ -2,8 +2,10 @@ require 'sinatra'
 require 'slim'
 require 'sqlite3'
 require 'bcrypt'
-
 enable :sessions
+require_relative './model.rb'
+include Model
+
 def dbCalled(path)
     db = SQLite3::Database.new(path)
     db.results_as_hash = true
@@ -26,14 +28,10 @@ get('/showlogin') do
 end
 
 get('/showaccount/:id') do
-    db = dbCalled("db/main.db")
     id = params[:id].to_i
     userId = session[:id].to_i
-    usersUnsorted = db.execute("SELECT id, username FROM users")
-    users = usersUnsorted.sort_by { |k| k["id"] }
-    images = db.execute("SELECT * FROM images WHERE user_id = ? OR creator_id = ?", id, id)
-    frames = db.execute("SELECT * FROM frameModRelation")
-    return slim(:account, locals:{images:images, frames:frames, users:users, id:id})
+    show_account_get(id,userId)
+    slim(:account, locals:{images:images, frames:frames, users:users, id:id})
 end
 
 # get('/images/show/:id') do
@@ -53,24 +51,11 @@ get('/logout') do
     session[:username] = nil
     redirect('/images')
 end
+
 post('/login') do
     username = params[:username]
     password = params[:password]
-    db = dbCalled('db/main.db')
-    result = db.execute("SELECT * FROM users WHERE username = ?", username).first
-    pwddigest = result["pwddigest"]
-    id = result["id"]
-    username = result["username"]
-    tokens = result["tokens"]
-
-    if BCrypt::Password.new(pwddigest) == password
-        session[:id] = id
-        session[:username] = username
-        session[:tokens] = tokens
-        redirect('/images')
-    else
-       "Username and Password do not match"
-    end
+    login_get(username,password)
 end
 
 
