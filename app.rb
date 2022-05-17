@@ -6,6 +6,14 @@ enable :sessions
 require_relative './model.rb'
 include Model
 
+before do
+    if  request.path_info != '/' && session[:id] == nil && request.path_info != '/error' && request.path_info != '/showlogin'
+        session[:loginquery] = true
+    else
+        session[:loginquery] = false
+    end
+end
+
 def dbCalled(path)
     db = SQLite3::Database.new(path)
     db.results_as_hash = true
@@ -16,7 +24,6 @@ end
 get('/') do
     slim(:start)
 end
-
 
 #-Users-
 get('/showregister') do
@@ -31,6 +38,11 @@ get('/showaccount/:id') do
     id = params[:id].to_i
     userId = session[:id].to_i
     show_account_get(id,userId)
+    db = dbCalled('db/main.db')
+    usersUnsorted = db.execute("SELECT id, username FROM users")
+    users = usersUnsorted.sort_by { |k| k["id"] }
+    images = db.execute("SELECT * FROM images WHERE user_id = ? OR creator_id = ?", id, id)
+    frames = db.execute("SELECT * FROM frameModRelation")
     slim(:account, locals:{images:images, frames:frames, users:users, id:id})
 end
 
@@ -45,7 +57,6 @@ end
 #     return slim(:"images/show", locals:{image:image, frames:frames, users:users})
 # end
 
-
 get('/logout') do
     session[:id] = nil
     session[:username] = nil
@@ -57,7 +68,6 @@ post('/login') do
     password = params[:password]
     login_get(username,password)
 end
-
 
 post("/users/new") do
     username = params[:username]
@@ -74,7 +84,6 @@ post("/users/new") do
 end
 
 #-Images-
-
 get('/images') do
     id = session[:id].to_i
     db = dbCalled("db/main.db")
@@ -103,7 +112,7 @@ get('/images/show/:id') do
     return slim(:"images/show", locals:{image:image, frames:frames, users:users})
 end
 
-post("/image/new") do 
+post("/image") do 
     id = session[:id].to_i
     nameMaxLength = params[:imageName][0..30]
     path = File.join("./public/img/",params[:imageFile]["filename"])
@@ -117,7 +126,7 @@ post("/image/new") do
         db = dbCalled('db/main.db')
         mod = rand(1...10)  
         db.execute("INSERT INTO images (path, mod, name, user_id, creator_id) VALUES (?, ?, ?, ?, ?)", pathForDb, mod, params[:imageName], id, id)
-        
+
         File.open(path, 'wb') do |f|
             f.write(params[:imageFile][:tempfile].read)
         end
@@ -128,7 +137,7 @@ post("/image/new") do
     end
 end
 
-post('/images/show/delete/:id') do 
+post('/images/delete/:id') do 
     id = params[:id].to_i
     db = dbCalled("db/main.db")
     deletePath = db.execute("SELECT path FROM images WHERE id = ?", id)
@@ -137,7 +146,7 @@ post('/images/show/delete/:id') do
     result = db.execute("DELETE FROM images WHERE id = ?", id)
     redirect('/images')
 end
-post('/images/show/update/:id') do 
+post('/images/update/:id') do 
     id = params[:id].to_i
     value = params[:value].to_i
     db = dbCalled("db/main.db")
@@ -145,7 +154,7 @@ post('/images/show/update/:id') do
     redirect("/images/show/#{id}")
 end
 
-post('/images/show/purchase/:id') do 
+post('/images/purchase/:id') do 
     db = dbCalled("db/main.db")
     id = params[:id].to_i
     user_id = session[:id].to_i

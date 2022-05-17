@@ -17,13 +17,13 @@ br
     p This piece may be bought for #{image[0]["price"]} Tokens 
 
 - if image[0]["user_id"] == session[:id] 
-    form method="POST" action="update/#{image[0]["id"]}" 
+    form method="POST" action="../update/#{image[0]["id"]}" 
         br
         input type="number" name="value" placeholder="Set a Price for Artwork"
         input class="HUD" type="submit" value="Set a Price for Artwork"/
         
 
-    form method="POST" action="delete/#{image[0]["id"]}" 
+    form method="POST" action="../delete/#{image[0]["id"]}" 
         br
         input class="HUD" type="submit" value="Remove the Artwork"/
     
@@ -35,7 +35,7 @@ br
     p Ask the owner to set a price if you wish to purchase
 - else
     - if session[:tokens] >= image[0]["price"]
-        form method="POST" action="purchase/#{image[0]["id"]}" 
+        form method="POST" action="../purchase/#{image[0]["id"]}" 
             input class="HUD" type="submit" value="Purchase this artwork"/
     - else
         form method="GET" action="/images/show/#{image[0]["id"]}" 
